@@ -1,0 +1,205 @@
+[
+  {
+    "cat": "Navegación",
+    "items": [
+      {
+        "cmd": "pwd",
+        "desc": "Muestra la ruta del directorio actual."
+      },
+      {
+        "cmd": "ls -la",
+        "desc": "Muestra archivos, incluidos ocultos, con detalle."
+      },
+      {
+        "cmd": "cd carpeta",
+        "desc": "Cambia al directorio indicado."
+      },
+      {
+        "cmd": "cd ..",
+        "desc": "Sube un nivel en la jerarquía."
+      }
+    ]
+  },
+  {
+    "cat": "Archivos y directorios",
+    "items": [
+      {
+        "cmd": "mkdir carpeta",
+        "desc": "Crea una carpeta nueva."
+      },
+      {
+        "cmd": "touch archivo",
+        "desc": "Crea un archivo vacío."
+      },
+      {
+        "cmd": "cp origen destino",
+        "desc": "Copia un archivo."
+      },
+      {
+        "cmd": "mv origen destino",
+        "desc": "Mueve o renombra."
+      },
+      {
+        "cmd": "rm -rf carpeta",
+        "desc": "Borra una carpeta y su contenido."
+      },
+      {
+        "cmd": "cat archivo",
+        "desc": "Muestra el contenido de un archivo."
+      },
+      {
+        "cmd": "echo \"texto\" > archivo",
+        "desc": "Escribe (sobrescribe) en un archivo."
+      },
+      {
+        "cmd": "echo \"texto\" >> archivo",
+        "desc": "Añade una línea al final."
+      },
+      {
+        "cmd": "find / -name archivo",
+        "desc": "Busca un archivo desde la raíz."
+      },
+      {
+        "cmd": "tree",
+        "desc": "Muestra la carpeta actual como árbol."
+      }
+    ]
+  },
+  {
+    "cat": "Búsqueda y tuberías",
+    "items": [
+      {
+        "cmd": "grep palabra archivo",
+        "desc": "Busca texto dentro de un archivo."
+      },
+      {
+        "cmd": "ls | grep txt",
+        "desc": "Tubería: conecta la salida de un comando con otro (| = AltGr+1)."
+      },
+      {
+        "cmd": "wc -l archivo",
+        "desc": "Cuenta líneas de un archivo."
+      },
+      {
+        "cmd": "sort archivo",
+        "desc": "Ordena las líneas alfabéticamente."
+      },
+      {
+        "cmd": "head -n 5 archivo",
+        "desc": "Primeras líneas de un archivo."
+      },
+      {
+        "cmd": "tail -n 5 archivo",
+        "desc": "Últimas líneas de un archivo."
+      }
+    ]
+  },
+  {
+    "cat": "Permisos y usuarios",
+    "items": [
+      {
+        "cmd": "ls -l",
+        "desc": "Muestra permisos de los archivos."
+      },
+      {
+        "cmd": "chmod 755 archivo",
+        "desc": "Cambia permisos (notación numérica)."
+      },
+      {
+        "cmd": "chown usuario archivo",
+        "desc": "Cambia el propietario."
+      },
+      {
+        "cmd": "whoami",
+        "desc": "Muestra tu usuario actual."
+      },
+      {
+        "cmd": "useradd usuario",
+        "desc": "Crea un nuevo usuario."
+      },
+      {
+        "cmd": "passwd",
+        "desc": "Cambia tu contraseña."
+      },
+      {
+        "cmd": "cat /etc/passwd",
+        "desc": "Lista los usuarios del sistema."
+      }
+    ]
+  },
+  {
+    "cat": "Paquetes",
+    "items": [
+      {
+        "cmd": "apt-get install paquete",
+        "desc": "Instala un paquete (Debian/Ubuntu)."
+      },
+      {
+        "cmd": "apt-get remove paquete",
+        "desc": "Desinstala un paquete."
+      },
+      {
+        "cmd": "dpkg -l",
+        "desc": "Lista paquetes .deb instalados."
+      },
+      {
+        "cmd": "rpm -qa",
+        "desc": "Lista paquetes .rpm instalados."
+      },
+      {
+        "cmd": "yum install paquete",
+        "desc": "Instala un paquete (Red Hat/Fedora)."
+      }
+    ]
+  },
+  {
+    "cat": "Sistema y procesos",
+    "items": [
+      {
+        "cmd": "uname -a",
+        "desc": "Información del sistema y kernel."
+      },
+      {
+        "cmd": "free -m",
+        "desc": "Uso de memoria RAM."
+      },
+      {
+        "cmd": "ps",
+        "desc": "Procesos en ejecución."
+      },
+      {
+        "cmd": "kill PID",
+        "desc": "Termina un proceso."
+      },
+      {
+        "cmd": "man comando",
+        "desc": "Manual de ayuda de un comando."
+      },
+      {
+        "cmd": "history",
+        "desc": "Historial de comandos usados."
+      }
+    ]
+  },
+  {
+    "cat": "Red y apagado",
+    "items": [
+      {
+        "cmd": "ifconfig",
+        "desc": "Configuración de red."
+      },
+      {
+        "cmd": "ping host",
+        "desc": "Comprueba conectividad."
+      },
+      {
+        "cmd": "shutdown -h now",
+        "desc": "Apaga el sistema."
+      },
+      {
+        "cmd": "reboot",
+        "desc": "Reinicia el sistema."
+      }
+    ]
+  }
+]

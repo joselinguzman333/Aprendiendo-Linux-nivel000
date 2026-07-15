@@ -1,10 +1,7 @@
-es codigo de sonnet 5 el 14 julio 2026 .
-se me daño el ordenador y quiero aprender Linux y le pedi me hiciera una app para practicar en el móvil.
-
 # Terminal Lab — app instalable (PWA)
 
 Esta carpeta es una **app web progresiva (PWA)**: se instala en el móvil como una app real
-(icono propio, pantalla completa, funciona sin internet) y puede recibir actualizaciones d loe
+(icono propio, pantalla completa, funciona sin internet) y puede recibir actualizaciones de
 contenido (comandos nuevos, lecciones nuevas) sin que tengas que reinstalar nada.
 
 ## Qué hay aquí
@@ -26,11 +23,11 @@ La forma más fácil y gratuita es **GitHub Pages**:
 2. Crea un repositorio nuevo (por ejemplo `terminal-lab`).
 3. Sube **todos los archivos de esta carpeta** manteniendo la carpeta `content/` tal cual
    (botón "Add file" → "Upload files" en la web de GitHub, o arrastrando la carpeta entera).
-4. Ve a **Settings → Pages**, en "Source" elige la rama `main` y la carpetabre(root)`, guarda.
+4. Ve a **Settings → Pages**, en "Source" elige la rama `main` y la carpeta `/ (root)`, guarda.
 5. En un par de minutos tendrás una URL como:
    `https://tu-usuario.github.io/terminal-lab/`
 
-## Paso km 2: instalarla en el móvil
+## Paso 2: instalarla en el móvil
 1. Abre esa URL en Chrome (Android) o Safari (iPhone).
 2. Android: menú (⋮) → "Instalar app" o "Añadir a pantalla de inicio".
    iPhone: botón compartir (□↑) → "Añadir a pantalla de inicio".
@@ -40,7 +37,7 @@ La forma más fácil y gratuita es **GitHub Pages**:
 ## Cómo añadir comandos o lecciones nuevas en el futuro
 No hace falta tocar el código de la app. Solo edita estos archivos y vuelve a subirlos a tu
 repositorio de GitHub:
-un
+
 - **Nuevo comando en la chuleta** → añade una entrada en `content/reference.json`
   dentro de la categoría que corresponda:
   ```json

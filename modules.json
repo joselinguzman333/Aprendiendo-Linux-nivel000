@@ -1,0 +1,284 @@
+[
+  {
+    "title": "Primeros pasos",
+    "icon": "📍",
+    "lessons": [
+      {
+        "title": "¿Dónde estoy?",
+        "explain": "En Linux siempre estás \"dentro\" de una carpeta. pwd (print working directory) te dice la ruta completa de dónde te encuentras ahora mismo.",
+        "task": "Escribe: pwd",
+        "hint": "Solo tienes que escribir pwd y pulsar Enter.",
+        "answer": "pwd",
+        "test": {
+          "__regex": true,
+          "source": "^pwd$",
+          "flags": "i"
+        }
+      },
+      {
+        "title": "Mirar alrededor",
+        "explain": "ls muestra los archivos y carpetas que hay en el directorio actual. Es el comando que más vas a usar.",
+        "task": "Escribe: ls",
+        "hint": "Escribe ls y pulsa Enter.",
+        "answer": "ls",
+        "test": {
+          "__regex": true,
+          "source": "^ls$",
+          "flags": "i"
+        }
+      },
+      {
+        "title": "Ver con detalle",
+        "explain": "Con -l ves permisos, propietario y tamaño de cada archivo; con -a ves también los archivos ocultos (los que empiezan por un punto). Puedes combinar ambos con -la.",
+        "task": "Escribe: ls -la",
+        "hint": "Prueba: ls -la",
+        "answer": "ls -la",
+        "test": {
+          "__regex": true,
+          "source": "^ls\\s+-(la|al|l|a)$",
+          "flags": "i"
+        }
+      },
+      {
+        "title": "Moverse entre carpetas",
+        "explain": "cd (change directory) te lleva a otra carpeta. cd .. sube un nivel y cd sin nada te lleva a tu home.",
+        "task": "Entra en la carpeta \"documentos\" escribiendo: cd documentos",
+        "hint": "Escribe: cd documentos",
+        "answer": "cd documentos",
+        "test": {
+          "__regex": true,
+          "source": "^cd\\s+documentos\\/?$",
+          "flags": "i"
+        }
+      }
+    ]
+  },
+  {
+    "title": "Archivos y carpetas",
+    "icon": "📂",
+    "lessons": [
+      {
+        "title": "Crear una carpeta",
+        "explain": "mkdir crea una carpeta nueva en el sitio donde te encuentras.",
+        "task": "Crea una carpeta llamada \"practica_leccion\": mkdir practica_leccion",
+        "hint": "Escribe: mkdir practica_leccion",
+        "answer": "mkdir practica_leccion",
+        "test": {
+          "__regex": true,
+          "source": "^mkdir\\s+practica_leccion$",
+          "flags": "i"
+        }
+      },
+      {
+        "title": "Crear un archivo",
+        "explain": "touch crea un archivo vacío (o actualiza su fecha si ya existe). Es un atajo muy usado aunque no aparezca en las chuletas clásicas.",
+        "task": "Crea un archivo llamado \"notas.txt\": touch notas.txt",
+        "hint": "Escribe: touch notas.txt",
+        "answer": "touch notas.txt",
+        "test": {
+          "__regex": true,
+          "source": "^touch\\s+notas\\.txt$",
+          "flags": "i"
+        }
+      },
+      {
+        "title": "Copiar archivos",
+        "explain": "cp copia un archivo (o una carpeta entera con -a/-r) a otro lugar o con otro nombre.",
+        "task": "Copia notas.txt a copia.txt: cp notas.txt copia.txt",
+        "hint": "Escribe: cp notas.txt copia.txt",
+        "answer": "cp notas.txt copia.txt",
+        "test": {
+          "__regex": true,
+          "source": "^cp\\s+notas\\.txt\\s+copia\\.txt$",
+          "flags": "i"
+        }
+      },
+      {
+        "title": "Mover y renombrar",
+        "explain": "mv mueve un archivo de sitio, o lo renombra si el destino está en la misma carpeta.",
+        "task": "Renombra copia.txt a copia_final.txt: mv copia.txt copia_final.txt",
+        "hint": "Escribe: mv copia.txt copia_final.txt",
+        "answer": "mv copia.txt copia_final.txt",
+        "test": {
+          "__regex": true,
+          "source": "^mv\\s+copia\\.txt\\s+copia_final\\.txt$",
+          "flags": "i"
+        }
+      },
+      {
+        "title": "Borrar",
+        "explain": "rm borra archivos. rm -r borra carpetas con todo su contenido. ¡Cuidado, en Linux no hay papelera de reciclaje!",
+        "task": "Borra copia_final.txt: rm copia_final.txt",
+        "hint": "Escribe: rm copia_final.txt",
+        "answer": "rm copia_final.txt",
+        "test": {
+          "__regex": true,
+          "source": "^rm\\s+copia_final\\.txt$",
+          "flags": "i"
+        }
+      }
+    ]
+  },
+  {
+    "title": "Contenido de archivos",
+    "icon": "📄",
+    "lessons": [
+      {
+        "title": "Ver contenido",
+        "explain": "cat muestra el contenido de un archivo de texto directamente en la pantalla.",
+        "task": "Muestra el contenido de notas.txt: cat notas.txt",
+        "hint": "Escribe: cat notas.txt",
+        "answer": "cat notas.txt",
+        "test": {
+          "__regex": true,
+          "source": "^cat\\s+notas\\.txt$",
+          "flags": "i"
+        }
+      },
+      {
+        "title": "Escribir en un archivo",
+        "explain": "echo escribe texto en pantalla; con > lo rediriges y lo guardas dentro de un archivo (si ya existía, se sobrescribe por completo).",
+        "task": "Escribe \"Hola Linux\" dentro de notas.txt: echo \"Hola Linux\" > notas.txt",
+        "hint": "Escribe: echo \"Hola Linux\" > notas.txt",
+        "answer": "echo \"Hola Linux\" > notas.txt",
+        "test": {
+          "__regex": true,
+          "source": "^echo\\s+.+>\\s*notas\\.txt$",
+          "flags": "i"
+        }
+      },
+      {
+        "title": "Añadir sin borrar",
+        "explain": ">> añade una línea al final del archivo, sin borrar lo que ya había — a diferencia de >.",
+        "task": "Añade otra línea: echo \"Segunda línea\" >> notas.txt",
+        "hint": "Escribe: echo \"Segunda línea\" >> notas.txt",
+        "answer": "echo \"Segunda línea\" >> notas.txt",
+        "test": {
+          "__regex": true,
+          "source": "^echo\\s+.+>>\\s*notas\\.txt$",
+          "flags": "i"
+        }
+      }
+    ]
+  },
+  {
+    "title": "Búsqueda y tuberías",
+    "icon": "🔍",
+    "lessons": [
+      {
+        "title": "Buscar texto",
+        "explain": "grep busca una palabra o patrón dentro de un archivo y muestra solo las líneas donde aparece.",
+        "task": "Busca \"joselin\" en /etc/passwd: grep joselin /etc/passwd",
+        "hint": "Escribe: grep joselin /etc/passwd",
+        "answer": "grep joselin /etc/passwd",
+        "test": {
+          "__regex": true,
+          "source": "^grep\\s+(-i\\s+)?joselin\\s+\\/etc\\/passwd$",
+          "flags": "i"
+        }
+      },
+      {
+        "title": "Tuberías",
+        "explain": "Una tubería | conecta la salida de un comando con la entrada del siguiente. En un teclado español se escribe con AltGr + 1.",
+        "task": "Cuenta cuántos procesos hay: ps | wc -l",
+        "hint": "Escribe: ps | wc -l",
+        "answer": "ps | wc -l",
+        "test": {
+          "__regex": true,
+          "source": "^ps\\s*\\|\\s*wc\\s+-l$",
+          "flags": "i"
+        }
+      },
+      {
+        "title": "Buscar archivos",
+        "explain": "find busca archivos y carpetas por nombre en todo el árbol de directorios, no solo en la carpeta actual.",
+        "task": "Busca todos los .txt desde tu home: find ~ -name \"*.txt\"",
+        "hint": "Escribe: find ~ -name \"*.txt\"",
+        "answer": "find ~ -name \"*.txt\"",
+        "test": {
+          "__regex": true,
+          "source": "^find\\s+.*-name\\s+.*\\.txt.*$",
+          "flags": "i"
+        }
+      },
+      {
+        "title": "Contar y ordenar",
+        "explain": "wc cuenta líneas, palabras o caracteres; sort ordena líneas alfabéticamente. Combinados con tuberías forman \"filtros\" muy potentes (también existen head y tail para ver solo el principio o el final).",
+        "task": "Ordena tu carpeta y cuenta cuántos elementos tiene: ls | sort | wc -l",
+        "hint": "Escribe: ls | sort | wc -l",
+        "answer": "ls | sort | wc -l",
+        "test": {
+          "__regex": true,
+          "source": "^ls\\s*\\|\\s*sort\\s*\\|\\s*wc\\s+-l$",
+          "flags": "i"
+        }
+      }
+    ]
+  },
+  {
+    "title": "Sistema",
+    "icon": "⚙️",
+    "lessons": [
+      {
+        "title": "Permisos",
+        "explain": "Cada archivo tiene permisos de lectura (r), escritura (w) y ejecución (x) para propietario, grupo y otros. chmod los cambia; en notación numérica 4=r, 2=w, 1=x.",
+        "task": "Quita los permisos de escritura a notas.txt: chmod 444 notas.txt",
+        "hint": "Escribe: chmod 444 notas.txt",
+        "answer": "chmod 444 notas.txt",
+        "test": {
+          "__regex": true,
+          "source": "^chmod\\s+444\\s+notas\\.txt$",
+          "flags": "i"
+        }
+      },
+      {
+        "title": "Procesos",
+        "explain": "ps muestra los procesos en ejecución junto a su PID (identificador único). Con ese PID podrías usar kill PID para terminarlo si algo se cuelga.",
+        "task": "Mira los procesos activos: ps",
+        "hint": "Escribe: ps",
+        "answer": "ps",
+        "test": {
+          "__regex": true,
+          "source": "^ps$",
+          "flags": "i"
+        }
+      },
+      {
+        "title": "El manual",
+        "explain": "Cuando no recuerdes cómo funciona un comando, man te muestra su manual de ayuda (en este simulador, una versión resumida).",
+        "task": "Consulta el manual de grep: man grep",
+        "hint": "Escribe: man grep",
+        "answer": "man grep",
+        "test": {
+          "__regex": true,
+          "source": "^man\\s+grep$",
+          "flags": "i"
+        }
+      },
+      {
+        "title": "Árbol de directorios",
+        "explain": "tree dibuja la estructura de carpetas y archivos como un árbol visual — la misma idea que el panel de la izquierda de esta app.",
+        "task": "Visualiza tu carpeta actual como árbol: tree",
+        "hint": "Escribe: tree",
+        "answer": "tree",
+        "test": {
+          "__regex": true,
+          "source": "^tree$",
+          "flags": "i"
+        }
+      },
+      {
+        "title": "Historial",
+        "explain": "history muestra todos los comandos que has escrito en esta sesión. Ideal para repasar lo aprendido.",
+        "task": "Revisa tu historial de comandos: history",
+        "hint": "Escribe: history",
+        "answer": "history",
+        "test": {
+          "__regex": true,
+          "source": "^history$",
+          "flags": "i"
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Terminal Lab · Lecciones guiadas</title>
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Terminal Lab">
+<meta name="theme-color" content="#050d09">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
+<link rel="manifest" href="manifest.json">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050d09; --bg-panel:#0a1912; --bg-panel2:#0d2015; --line:#123120;
+  --fg:#b9f5c9; --fg-dim:#5f8d74; --fg-bright:#eaffef;
+  --amber:#ffb454; --amber-dim:#8a6a3c; --teal:#58e6b9; --red:#ff6b6b;
+  --glow: 0 0 6px rgba(120,255,180,0.25);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font-family:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;}
+body{min-height:100vh;background:
+    radial-gradient(ellipse at 15% -10%, rgba(88,230,185,0.08), transparent 45%),
+    radial-gradient(ellipse at 100% 110%, rgba(255,180,84,0.06), transparent 45%),
+    var(--bg);}
+.wrap{max-width:1440px;margin:0 auto;padding:16px 16px 34px;}
+
+header.top{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; padding:2px 4px 12px; border-bottom:1px dashed var(--line);}
+.brand{display:flex; align-items:center; gap:10px;}
+.brand .dot{width:9px;height:9px;border-radius:50%;background:var(--teal);box-shadow:0 0 8px var(--teal);animation:blink 2.4s infinite;}
+@keyframes blink{0%,60%{opacity:1;}70%,100%{opacity:.25;}}
+h1{font-size:15px;letter-spacing:.16em;text-transform:uppercase;margin:0;color:var(--amber);font-weight:700;}
+.brand .sub{color:var(--fg-dim);font-size:11.5px;}
+.tabs{display:flex;gap:6px;}
+.tabbtn{background:var(--bg-panel);border:1px solid var(--line);color:var(--fg-dim);font:inherit;font-size:11.5px;padding:7px 12px;border-radius:6px;cursor:pointer;letter-spacing:.03em;}
+.tabbtn.active{background:var(--bg-panel2);color:var(--teal);border-color:var(--teal);box-shadow:var(--glow);}
+.hdrbtns{display:flex;gap:6px;}
+.iconbtn{background:var(--bg-panel);border:1px solid var(--line);color:var(--fg);font:inherit;font-size:11.5px;padding:7px 11px;border-radius:6px;cursor:pointer;}
+.iconbtn:hover{border-color:var(--amber);color:var(--amber);}
+
+.progbar-wrap{margin:12px 4px 4px;display:flex;align-items:center;gap:10px;font-size:11px;color:var(--fg-dim);}
+.progbar{flex:1;height:6px;border-radius:4px;background:var(--line);overflow:hidden;}
+.progbar > div{height:100%;background:linear-gradient(90deg,var(--teal),var(--amber));transition:width .4s ease;}
+
+.grid3{display:grid;grid-template-columns:250px 1fr 320px;gap:14px;margin-top:12px;align-items:start;}
+@media (max-width:1050px){.grid3{grid-template-columns:1fr;}}
+
+.panel{background:var(--bg-panel);border:1px solid var(--line);border-radius:10px;}
+.panel h2{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--amber);margin:0;padding:12px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;}
+.panel h2 small{color:var(--fg-dim);font-weight:400;letter-spacing:0;text-transform:none;font-size:10.5px;}
+
+#tree{padding:10px 8px 16px;max-height:640px;overflow-y:auto;font-size:12px;}
+#tree::-webkit-scrollbar{width:8px;} #tree::-webkit-scrollbar-thumb{background:var(--line);border-radius:6px;}
+.mod{margin-bottom:10px;}
+.mod .modhead{display:flex;justify-content:space-between;gap:6px;padding:6px 6px;color:var(--fg-bright);font-weight:700;}
+.mod .modhead .count{color:var(--fg-dim);font-weight:400;font-size:10.5px;}
+.mod .modhead.done{color:var(--teal);}
+.lesson{display:flex;align-items:baseline;gap:4px;padding:3px 4px 3px 4px;border-radius:4px;cursor:pointer;white-space:pre;}
+.lesson:hover{background:var(--bg-panel2);}
+.lesson .branch{color:var(--fg-dim);}
+.lesson .mark{width:14px;display:inline-block;}
+.lesson.done .mark{color:var(--teal);}
+.lesson.pending .mark{color:var(--fg-dim);}
+.lesson.current{background:var(--bg-panel2);}
+.lesson.current .mark{color:var(--amber);}
+.lesson .ltitle{color:var(--fg);}
+.lesson.current .ltitle{color:var(--amber);font-weight:700;}
+.lesson.done .ltitle{color:var(--fg-dim);text-decoration:line-through;text-decoration-color:var(--line);}
+
+.crt{position:relative;border-radius:8px;overflow:hidden;background:#0e0e0e;border:1px solid var(--line);box-shadow:0 10px 30px -12px rgba(0,0,0,.7);}
+.titlebar{display:flex;align-items:center;justify-content:center;padding:8px 12px;background:#1a1a1a;border-bottom:1px solid var(--line);font-size:12px;color:var(--fg-dim);letter-spacing:.02em;}
+.titlebar .path{display:none;}
+#screen{position:relative;height:400px;overflow-y:auto;padding:12px 16px 10px;font-size:14px;line-height:1.5;border-top:1px solid var(--line);}
+#screen::-webkit-scrollbar{width:10px;} #screen::-webkit-scrollbar-thumb{background:var(--line);border-radius:6px;}
+#screen .l{white-space:pre-wrap;word-break:break-word;}
+.muted{color:var(--fg-dim);} .amber{color:var(--amber);} .teal{color:var(--teal);} .bright{color:var(--fg-bright);} .err{color:var(--red);}
+.prompt-line{display:flex;gap:6px;flex-wrap:wrap;}
+.ps1{color:#6bd15c;font-weight:600;}
+.ps1 .host{color:#6bd15c;}
+.ps1 .path2{color:#5da9ff;}
+.inputRow{display:flex;align-items:flex-start;gap:0;padding:10px 16px 10px;}
+#cmdline{flex:1;background:transparent;border:none;outline:none;color:var(--fg-bright);font:inherit;font-size:14px;caret-color:#d0d0d0;}
+.hint{padding:0 16px 8px;font-size:10.5px;color:var(--fg-dim);}
+.hint kbd{border:1px solid var(--line);border-radius:3px;padding:0 4px;color:var(--amber);}
+
+/* Teclado virtual */
+#vkeyboard{background:#161616;border-top:1px solid var(--line);padding:8px 8px 10px;}
+.vk-row{display:flex;gap:5px;margin-bottom:5px;justify-content:center;}
+.vk-key{flex:1;max-width:34px;height:34px;display:flex;align-items:center;justify-content:center;background:#262626;border:1px solid #333;border-radius:6px;color:#e2e2e2;font-family:inherit;font-size:12.5px;cursor:pointer;user-select:none;}
+.vk-key:active{background:#3a3a3a;}
+.vk-key.wide{flex:2.2;max-width:none;}
+.vk-key.xwide{flex:5.5;max-width:none;}
+.vk-key.fn{background:#1f1f1f;color:var(--fg-dim);font-size:10.5px;}
+.vk-key.accent{color:var(--teal);border-color:var(--amber-dim);}
+.vk-key.on{background:var(--bg-panel2);color:var(--teal);border-color:var(--teal);}
+
+#lessonPanel{padding:14px;font-size:12.5px;}
+.lbadge{display:inline-block;font-size:10px;letter-spacing:.06em;color:var(--fg-dim);border:1px solid var(--line);border-radius:4px;padding:2px 7px;margin-bottom:8px;}
+.ltitle2{color:var(--fg-bright);font-size:15px;font-weight:700;margin:0 0 10px;}
+.lexplain{color:var(--fg);line-height:1.55;margin-bottom:12px;}
+.ltask{border:1px solid var(--amber-dim);background:rgba(255,180,84,0.06);border-radius:7px;padding:10px 12px;margin-bottom:12px;}
+.ltask b{color:var(--amber);display:block;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;margin-bottom:5px;}
+.ltask code{color:var(--fg-bright);}
+.lbtns{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
+.lbtns button{background:var(--bg-panel2);border:1px solid var(--line);color:var(--fg);font:inherit;font-size:11.5px;padding:7px 10px;border-radius:6px;cursor:pointer;}
+.lbtns button:hover{border-color:var(--teal);color:var(--teal);}
+.lhintbox{font-size:11.5px;color:var(--teal);background:rgba(88,230,185,0.06);border:1px dashed var(--teal);border-radius:6px;padding:8px 10px;margin-bottom:10px;display:none;}
+.lhintbox.show{display:block;}
+.lnav{display:flex;justify-content:space-between;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);}
+.lnav button{background:none;border:none;color:var(--fg-dim);font:inherit;font-size:11.5px;cursor:pointer;}
+.lnav button:hover{color:var(--amber);}
+.success{background:rgba(88,230,185,0.1);border:1px solid var(--teal);color:var(--teal);border-radius:7px;padding:10px 12px;margin-bottom:12px;font-size:12px;}
+.freebox{color:var(--fg);line-height:1.6;}
+.freebox button{margin-top:10px;}
+
+.overlay{position:fixed;inset:0;background:rgba(2,8,5,0.7);display:none;align-items:center;justify-content:center;z-index:50;padding:20px;}
+.overlay.open{display:flex;}
+.modal{background:var(--bg-panel);border:1px solid var(--line);border-radius:10px;max-width:760px;width:100%;max-height:80vh;overflow-y:auto;padding:18px 20px;}
+.modal h3{color:var(--amber);margin-top:0;font-size:13px;letter-spacing:.1em;text-transform:uppercase;}
+.modal .close{float:right;cursor:pointer;color:var(--fg-dim);}
+details{margin-bottom:6px;border-bottom:1px solid var(--line);}
+details summary{cursor:pointer;font-size:12px;padding:7px 2px;color:var(--fg-bright);list-style:none;display:flex;justify-content:space-between;}
+details summary::-webkit-details-marker{display:none;}
+details summary::after{content:"+";color:var(--fg-dim);}
+details[open] summary::after{content:"–";}
+details .items{padding:2px 2px 10px 4px;}
+.cmditem{display:flex;gap:8px;padding:4px 4px;border-radius:4px;cursor:pointer;font-size:11.5px;}
+.cmditem:hover{background:var(--bg-panel2);}
+.cmditem code{color:var(--teal);white-space:nowrap;}
+.cmditem span{color:var(--fg-dim);}
+
+footer.note{margin-top:14px;font-size:11px;color:var(--fg-dim);text-align:center;}
+.updatebar{display:none;position:fixed;left:0;right:0;bottom:0;background:var(--amber);color:#1a1200;font-size:12.5px;font-weight:600;padding:10px 14px;text-align:center;z-index:60;cursor:pointer;}
+.updatebar.show{display:block;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <span class="dot"></span>
+      <div><h1>Terminal Lab</h1><div class="sub">Terminal interactiva + lecciones guiadas de Linux</div></div>
+    </div>
+    <div class="tabs">
+      <button class="tabbtn active" id="tabGuided">🎓 Modo guiado</button>
+      <button class="tabbtn" id="tabFree">🧪 Práctica libre</button>
+    </div>
+    <div class="hdrbtns">
+      <button class="iconbtn" id="btnCheat">📖 Chuleta</button>
+      <button class="iconbtn" id="btnReset">🔄 Reiniciar sistema</button>
+    </div>
+  </header>
+
+  <div class="progbar-wrap">
+    <span id="progLabel">Progreso: 0/21</span>
+    <div class="progbar"><div id="progFill" style="width:0%"></div></div>
+  </div>
+
+  <div class="grid3">
+    <div class="panel">
+      <h2>Ruta de aprendizaje <small id="modCount">5 módulos</small></h2>
+      <div id="tree"></div>
+    </div>
+
+    <div class="crt">
+      <div class="titlebar"><span>joselin@terminal-lab: <span id="tb-path">~</span></span></div>
+      <div class="inputRow">
+        <span class="ps1" id="ps1">joselin@terminal-lab<span class="host">:</span><span class="path2">~</span>$&nbsp;</span>
+        <input id="cmdline" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+      </div>
+      <div id="vkeyboard"></div>
+      <div class="hint"><kbd>Enter</kbd> ejecutar · <kbd>↑</kbd><kbd>↓</kbd> historial · <kbd>Tab</kbd> autocompletar · <kbd>|</kbd> = AltGr+1 en teclado ES</div>
+      <div id="screen"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Lección <small id="lessonCounter">1/21</small></h2>
+      <div id="lessonPanel"></div>
+    </div>
+  </div>
+
+  <footer class="note">Contenido basado en «Chuleta de comandos Linux para no perderse» y «Comandos básicos» (Curso de Seguridad Informática, UB) · Todo ocurre en un sistema simulado, no toca tu ordenador real.<br>Terminal Lab <span id="appVersion">v1.0.0</span> · <span id="contentVersion"></span></footer>
+</div>
+<div class="updatebar" id="updateBar">⬆️ Hay una nueva versión con contenido actualizado — toca aquí para actualizar</div>
+
+<div class="overlay" id="cheatOverlay">
+  <div class="modal">
+    <span class="close" id="closeCheat">✕ cerrar</span>
+    <h3>Chuleta de comandos</h3>
+    <div id="refList"></div>
+  </div>
+</div>
+
+<script>
+function mkdir_(children, owner){ return {type:'dir', children: children||{}, perms:'drwxr-xr-x', owner: owner||'root', group: owner||'root', mtime: nowStr()}; }
+function mkfile_(content, owner){ return {type:'file', content: content||'', perms:'-rw-r--r--', owner: owner||'joselin', group: owner||'joselin', mtime: nowStr()}; }
+function nowStr(){ const d=new Date(); return d.toLocaleString('es-ES',{month:'short',day:'2-digit',hour:'2-digit',minute:'2-digit'}); }
+
+let users, groups, currentUser, installedPkgs;
+const pkgCatalog = {
+  firefox:{version:'128.0', size:'71.4 MB', desc:'Navegador web Firefox'},
+  git:{version:'2.43.0', size:'11.2 MB', desc:'Sistema de control de versiones'},
+  htop:{version:'3.3.0', size:'.2 MB', desc:'Monitor interactivo de procesos'},
+  curl:{version:'8.5.0', size:'.5 MB', desc:'Cliente para transferir datos por red'},
+  wget:{version:'1.21', size:'.9 MB', desc:'Descargador de ficheros por red'},
+  tree:{version:'2.1.1', size:'.1 MB', desc:'Muestra directorios en forma de árbol'},
+  python3:{version:'3.11', size:'35 MB', desc:'Lenguaje de programación Python'}
+};
+
+function buildFS(){
+  return mkdir_({
+    bin: mkdir_({}), boot: mkdir_({}),
+    etc: mkdir_({ passwd: mkfile_(''), group: mkfile_(''), hostname: mkfile_('terminal-lab\n') }),
+    home: mkdir_({ joselin: mkdir_({
+        documentos: mkdir_({ 'apuntes.txt': mkfile_('Apuntes UF1286 - Administración de sistemas operativos\n') }),
+        descargas: mkdir_({}), practica: mkdir_({}),
+        '.bashrc': mkfile_('export PS1="\\u@\\h:\\w$ "\n')
+      }, 'joselin') }),
+    proc: mkdir_({
+      cpuinfo: mkfile_('processor : 0\nvendor_id : GenuineIntel\nmodel name : Intel(R) Core(TM) i5 CPU\n'),
+      meminfo: mkfile_('MemTotal:        8127540 kB\nMemFree:         2143220 kB\n'),
+      mounts: mkfile_('/dev/sda1 / ext4 rw,relatime 0 0\n'),
+      version: mkfile_('Linux version 6.8.0-terminal-lab\n'),
+      modules: mkfile_('ext4 897024 1 - Live\n'),
+      net: mkdir_({ dev: mkfile_(' eth0: 118273 980 0 0\n') })
+    }),
+    tmp: mkdir_({}),
+    usr: mkdir_({ bin: mkdir_({ nano: mkfile_('[binario]'), vim: mkfile_('[binario]'), grep: mkfile_('[binario]'), bash: mkfile_('[binario]') }) }),
+    var: mkdir_({ log: mkdir_({
+        'kern.log': mkfile_('Jul 12 09:00:01 terminal-lab kernel: módulo cargado\n'),
+        'syslog': mkfile_('Jul 12 09:01:12 terminal-lab systemd: Sesión de joselin iniciada.\n'),
+        'auth.log': mkfile_('Jul 12 09:01:10 terminal-lab sshd: Accepted password for joselin\n')
+      }) })
+  });
+}
+function resetAllState(){
+  root = buildFS();
+  cwd = ['home','joselin']; prevCwd=[...cwd];
+  users = { root:{uid:0,gid:0,groups:['root']}, joselin:{uid:1000,gid:1000,groups:['joselin','admin']} };
+  groups = { root:[], sudo:['joselin'], admin:['joselin'], joselin:[] };
+  currentUser='joselin';
+  installedPkgs = new Set(['bash','coreutils','nano','vim','grep']);
+  refreshPasswdGroup();
+}
+let root; let cwd; const HOME=['home','joselin']; let prevCwd;
+
+function refreshPasswdGroup(){
+  let p='',g='';
+  for(const u in users){ const info=users[u]; p += `${u}:x:${info.uid}:${info.gid}:${u==='root'?'root':'Joselin'}:/${u==='root'?'root':'home/'+u}:/bin/bash\n`; }
+  for(const gr in groups){ g += `${gr}:x:${users[gr]?users[gr].gid:1500}:${groups[gr].join(',')}\n`; }
+  getNode(['etc']).children.passwd.content = p;
+  getNode(['etc']).children.group.content = g;
+}
+function getNode(pathArr){ let node=root; for(const seg of pathArr){ if(node.type!=='dir'||!node.children[seg]) return undefined; node=node.children[seg]; } return node; }
+function getParent(pathArr){ if(pathArr.length===0) return null; return getNode(pathArr.slice(0,-1)); }
+function pathToStr(arr){ return '/'+arr.join('/'); }
+function displayPath(arr){ const s=pathToStr(arr), h=pathToStr(HOME); if(s===h) return '~'; if(s.startsWith(h+'/')) return '~'+s.slice(h.length); return s; }
+function resolvePath(input){
+  if(input===undefined||input==='') return [...cwd];
+  if(input==='-') return [...prevCwd];
+  if(input==='~') return [...HOME];
+  if(input.startsWith('~/')) input = pathToStr(HOME)+input.slice(1);
+  let segs = input.startsWith('/') ? input.split('/').filter(Boolean) : [...cwd, ...input.split('/').filter(Boolean)];
+  const out=[];
+  for(const s of segs){ if(s==='.') continue; else if(s==='..') out.pop(); else out.push(s); }
+  return out;
+}
+
+const screen = document.getElementById('screen');
+function esc(s){ return (s+'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function printRaw(html){ const div=document.createElement('div'); div.className='l'; div.innerHTML=html; screen.appendChild(div); screen.scrollTop=screen.scrollHeight; }
+function print(text, cls){ if(!text) return; printRaw(`<span class="${cls||''}">${esc(text)}</span>`); }
+function printPromptEcho(line){ printRaw(`<div class="prompt-line"><span class="ps1">${esc(currentUser)}@terminal-lab<span class="host">:</span><span class="path2">${esc(displayPath(cwd))}</span>$</span>&nbsp;<span class="bright">${esc(line)}</span></div>`); }
+
+const input = document.getElementById('cmdline');
+const ps1 = document.getElementById('ps1');
+const tbPath = document.getElementById('tb-path');
+function updatePrompt(){
+  ps1.innerHTML = `${esc(currentUser)}@terminal-lab<span class="host">:</span><span class="path2">${esc(displayPath(cwd))}</span>$&nbsp;`;
+  tbPath.textContent = displayPath(cwd);
+}
+let history=[]; let histIdx=-1;
+function submitLine(rawLine){
+  input.value='';
+  if(rawLine.trim()!==''){ history.push(rawLine); }
+  histIdx = history.length;
+  printPromptEcho(rawLine);
+  execute(rawLine);
+  updatePrompt();
+  if(mode==='guided') checkLessonProgress(rawLine);
+}
+function historyUp(){ if(histIdx>0){ histIdx--; input.value=history[histIdx]||''; } }
+function historyDown(){ if(histIdx<history.length){ histIdx++; input.value=history[histIdx]||''; } }
+function insertAtCursor(text){
+  const s = input.selectionStart ?? input.value.length;
+  const e = input.selectionEnd ?? input.value.length;
+  input.value = input.value.slice(0,s) + text + input.value.slice(e);
+  const pos = s + text.length;
+  input.setSelectionRange(pos,pos);
+  input.focus();
+}
+function backspaceAtCursor(){
+  const s = input.selectionStart ?? input.value.length;
+  const e = input.selectionEnd ?? input.value.length;
+  if(s===e && s>0){ input.value = input.value.slice(0,s-1)+input.value.slice(s); input.setSelectionRange(s-1,s-1); }
+  else { input.value = input.value.slice(0,s)+input.value.slice(e); input.setSelectionRange(s,s); }
+  input.focus();
+}
+function ctrlC(){
+  printRaw(`<div class="prompt-line"><span class="ps1">${esc(currentUser)}@terminal-lab<span class="host">:</span><span class="path2">${esc(displayPath(cwd))}</span>$</span>&nbsp;<span class="bright">${esc(input.value)}</span><span class="err">^C</span></div>`);
+  input.value=''; histIdx = history.length;
+}
+function ctrlL(){ screen.innerHTML=''; }
+input.addEventListener('keydown', e=>{
+  if(e.key==='Enter'){ submitLine(input.value); }
+  else if(e.key==='ArrowUp'){ historyUp(); e.preventDefault(); }
+  else if(e.key==='ArrowDown'){ historyDown(); e.preventDefault(); }
+  else if(e.key==='Tab'){ e.preventDefault(); doTabComplete(); }
+  else if(e.key==='c' && e.ctrlKey){ e.preventDefault(); ctrlC(); }
+  else if(e.key==='l' && e.ctrlKey){ e.preventDefault(); ctrlL(); }
+});
+document.getElementById('screen').addEventListener('click', ()=>input.focus());
+
+function doTabComplete(){
+  const val=input.value; const parts=val.split(' ');
+  if(parts.length<=1){
+    const matches = ALL_COMMANDS.filter(c=>c.startsWith(val));
+    if(matches.length===1) input.value = matches[0]+' ';
+    else if(matches.length>1) print(matches.join('   '), 'muted');
+    return;
+  }
+  const last=parts[parts.length-1];
+  const dirGuess = last.includes('/') ? last.split('/').slice(0,-1).join('/') : '';
+  const namePart = last.includes('/') ? last.split('/').pop() : last;
+  const baseArr = resolvePath(dirGuess||'.');
+  const node = getNode(baseArr);
+  if(node && node.type==='dir'){
+    const names = Object.keys(node.children).filter(n=>n.startsWith(namePart));
+    if(names.length===1){ parts[parts.length-1]=(dirGuess?dirGuess+'/':'')+names[0]+(node.children[names[0]].type==='dir'?'/':''); input.value=parts.join(' '); }
+    else if(names.length>1) print(names.join('   '), 'muted');
+  }
+}
+
+function tokenize(str){ const re=/"([^"]*)"|'([^']*)'|(\S+)/g; const out=[]; let m; while((m=re.exec(str))!==null){ out.push(m[1]!==undefined?m[1]:m[2]!==undefined?m[2]:m[3]); } return out; }
+function execute(line){
+  line=line.trim(); if(line==='') return;
+  let redirectAppend=false, redirectFile=null;
+  const redirMatch = line.match(/\s(>>|>)\s*(\S+)\s*$/);
+  if(redirMatch){ redirectAppend=redirMatch[1]==='>>'; redirectFile=redirMatch[2]; line=line.slice(0,redirMatch.index).trim(); }
+  let background=false; if(line.endsWith('&')){ background=true; line=line.slice(0,-1).trim(); }
+  const segments = line.split('|').map(s=>s.trim()).filter(Boolean);
+  if(segments.length===0) return;
+  let stdin=null, finalOutput='';
+  for(const seg of segments){
+    const tokens=tokenize(seg); let cmd=tokens[0]; let args=tokens.slice(1);
+    if(cmd==='sudo'){ cmd=args[0]; args=args.slice(1); }
+    if(!cmd) continue;
+    let result;
+    try{ result = runCommand(cmd, args, stdin); }catch(ex){ result={out:'',err:'terminal-lab: error interno ejecutando "'+cmd+'"'}; }
+    if(result===undefined) result={out:'',err:`bash: ${cmd}: orden no encontrada`};
+    if(result.err){ print(result.err,'err'); return; }
+    stdin = result.out||''; finalOutput = stdin;
+  }
+  if(redirectFile){
+    const target=resolvePath(redirectFile); const parent=getParent(target); const name=target[target.length-1];
+    if(!parent||parent.type!=='dir'){ print(`bash: ${redirectFile}: No such file or directory`,'err'); return; }
+    if(parent.children[name] && parent.children[name].type==='dir'){ print(`bash: ${redirectFile}: Is a directory`,'err'); return; }
+    const content = (redirectAppend && parent.children[name]) ? (parent.children[name].content + finalOutput + (finalOutput.endsWith('\n')?'':'\n')) : (finalOutput + (finalOutput.endsWith('\n')?'':'\n'));
+    parent.children[name] = mkfile_(content, currentUser);
+  } else {
+    if(finalOutput!=='') print(finalOutput.replace(/\n$/,''), 'fg');
+    if(background) print(`[1] ${Math.floor(1000+Math.random()*8999)}`, 'muted');
+  }
+}
+
+function lsFormat(dirNode, showAll, longFmt){
+  let names = Object.keys(dirNode.children);
+  if(!showAll) names = names.filter(n=>!n.startsWith('.')); else names=['.','..',...names];
+  names.sort();
+  if(!longFmt) return names.join('  ');
+  const lines = names.map(n=>{
+    let node = n==='.'||n==='..' ? {type:'dir',perms:'drwxr-xr-x',owner:currentUser,group:currentUser,mtime:nowStr(),content:''} : dirNode.children[n];
+    const size = node.type==='dir' ? 4096 : (node.content?node.content.length:0);
+    return `${node.perms} 1 ${node.owner} ${node.group} ${String(size).padStart(6)} ${node.mtime}  ${node.type==='dir'?n+'/':n}`;
+  });
+  return lines.join('\n');
+}
+function chmodApply(node, spec){
+  if(/^[0-7]{3,4}$/.test(spec)){
+    const map=['---','--x','-w-','-wx','r--','r-x','rw-','rwx'];
+    const digits=spec.slice(-3).split('').map(Number);
+    node.perms=(node.type==='dir'?'d':'-')+digits.map(d=>map[d]).join('');
+    return true;
+  }
+  const m=spec.match(/^([ugoa]*)([+\-=])([rwx]+)$/);
+  if(m){
+    let [,who,op,perm]=m; who=who||'a';
+    const idx={u:1,g:4,o:7}; const whoList = who==='a'?['u','g','o']:who.split('');
+    let arr=node.perms.split('');
+    whoList.forEach(w=>{ const base=idx[w]; ['r','w','x'].forEach((p,pi)=>{
+      if(perm.includes(p)){ if(op==='+'||op==='=') arr[base+pi]=p; else if(op==='-') arr[base+pi]='-'; }
+      else if(op==='=') arr[base+pi]='-';
+    }); });
+    node.perms=arr.join(''); return true;
+  }
+  return false;
+}
+function treeCommand(args){
+  const startArr = args[0] ? resolvePath(args[0]) : cwd;
+  const startNode = getNode(startArr);
+  if(!startNode) return `tree: ${args[0]}: No existe el fichero o directorio`;
+  let out = (args[0]||'.') + '\n';
+  function walk(node, prefix){
+    const names = Object.keys(node.children).sort();
+    names.forEach((n,i)=>{
+      const last = i===names.length-1;
+      out += prefix + (last?'└── ':'├── ') + n + (node.children[n].type==='dir'?'/':'') + '\n';
+      if(node.children[n].type==='dir') walk(node.children[n], prefix + (last?'    ':'│   '));
+    });
+  }
+  walk(startNode, '');
+  return out.trimEnd();
+}
+
+function runCommand(cmd, args, stdin){
+  switch(cmd){
+    case 'ayuda': case 'help': return {out: helpText()};
+    case 'man': return {out: manText(args)};
+    case 'clear': screen.innerHTML=''; return {out:''};
+    case 'history': return {out: history.map((h,i)=>`  ${i+1}  ${h}`).join('\n')};
+    case 'pwd': return {out: pathToStr(cwd)};
+    case 'whoami': return {out: currentUser};
+    case 'id': { const u=users[currentUser]; return {out:`uid=${u.uid}(${currentUser}) gid=${u.gid}(${currentUser}) grupos=${u.groups.join(',')}`}; }
+    case 'groups': return {out: users[currentUser].groups.join(' ')};
+    case 'hostname': return {out:'terminal-lab'};
+    case 'date': return {out: new Date().toString()};
+    case 'uptime': return {out:' 10:42:07 up 2:14,  1 user,  load average: 0.14, 0.09, 0.05'};
+    case 'uname': return {out: args.includes('-a') ? 'Linux terminal-lab 6.8.0-terminal-lab #1 SMP x86_64 GNU/Linux' : (args.includes('-r')?'6.8.0-terminal-lab':'Linux')};
+    case 'free': return {out:'              total        used        free\nMem:        8127540     2984320     2143220\nSwap:       2097148           0     2097148'};
+    case 'df': return {out:'Filesystem     1K-bloques    Usados Disponibles Uso% Montado en\n/dev/sda1        20154332   8452110   11290000  43% /'};
+
+    case 'shutdown': return doShutdown(args);
+    case 'halt': return doShutdown(['-h']);
+    case 'reboot': return doShutdown(['-r']);
+    case 'logout': case 'exit': return {out:'\nSesión cerrada. (Pulsa "Reiniciar sistema" para empezar de nuevo)'};
+
+    case 'cd': return doCd(args);
+    case 'ls': return doLs(args);
+    case 'mkdir': return doMkdir(args);
+    case 'rmdir': return doRmdir(args);
+    case 'rm': return doRm(args);
+    case 'touch': return doTouch(args);
+    case 'cp': return doCp(args);
+    case 'mv': return doMv(args);
+    case 'ln': return doLn(args);
+    case 'cat': return doCat(args, stdin);
+    case 'more': case 'less': return doCat(args, stdin);
+    case 'head': return doHeadTail(args, stdin, true);
+    case 'tail': return doHeadTail(args, stdin, false);
+    case 'echo': return doEcho(args);
+    case 'grep': return doGrep(args, stdin);
+    case 'wc': return doWc(args, stdin);
+    case 'sort': return doSort(args, stdin);
+    case 'find': return doFind(args);
+    case 'whereis': return {out: args[0] ? `${args[0]}: /usr/bin/${args[0]}` : ''};
+    case 'which': return {out: args[0] ? `/usr/bin/${args[0]}` : ''};
+    case 'tree': return {out: treeCommand(args)};
+
+    case 'chmod': return doChmod(args);
+    case 'chown': return doChown(args, false);
+    case 'chgrp': return doChown(args, true);
+
+    case 'useradd': case 'adduser': return doUseradd(args);
+    case 'userdel': case 'deluser': return doUserdel(args);
+    case 'groupadd': return doGroupadd(args);
+    case 'groupdel': return doGroupdel(args);
+    case 'passwd': return doPasswd(args);
+
+    case 'apt-get': return doAptGet(args);
+    case 'apt-cache': return doAptCache(args);
+    case 'dpkg': return doDpkg(args);
+    case 'rpm': return doRpm(args);
+    case 'yum': return doYum(args);
+
+    case 'ps': return {out: psTable()};
+    case 'top': return {out: topTable()};
+    case 'kill': return {out: args[0] ? `Señal enviada al proceso ${args[args.length-1]} (simulado).` : 'uso: kill PID'};
+    case 'jobs': return {out:'[1]+  Running   sleep 100 &'};
+
+    case 'ifconfig': return {out:'eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500\n        inet 192.168.1.45  netmask 255.255.255.0'};
+    case 'ping': return {out: pingText(args)};
+    case 'netstat': return {out:'Proto Recv-Q Send-Q Local Address       Foreign Address     State\ntcp        0      0 192.168.1.45:22    192.168.1.20:51422 ESTABLISHED'};
+
+    case 'nano': case 'vi': case 'vim': return {out:`(simulado) Se abriría el editor "${cmd}" para: ${args[0]||'(nuevo archivo)'}\nEn este simulador usa: echo "texto" > ${args[0]||'archivo'}`};
+    case 'tar': return {out:`tar ${args.join(' ')} — operación de empaquetado simulada.`};
+    case 'gzip': return {out:`${args[0]||'archivo'} comprimido (simulado).`};
+
+    default: return undefined;
+  }
+}
+
+function doCd(args){
+  prevCwd=[...cwd];
+  let target=args[0];
+  if(!target||target==='~'){ cwd=[...HOME]; return {out:''}; }
+  const p=resolvePath(target); const node=getNode(p);
+  if(!node) return {err:`bash: cd: ${target}: No existe el fichero o directorio`};
+  if(node.type!=='dir') return {err:`bash: cd: ${target}: No es un directorio`};
+  cwd=p; return {out:''};
+}
+function doLs(args){
+  const flags=args.filter(a=>a.startsWith('-')).join('');
+  const targets=args.filter(a=>!a.startsWith('-'));
+  const p = targets.length? resolvePath(targets[0]) : cwd;
+  const node=getNode(p);
+  if(!node) return {err:`ls: no se puede acceder a '${targets[0]}': No existe el fichero o directorio`};
+  if(node.type==='file') return {out: targets[0]};
+  return {out: lsFormat(node, flags.includes('a'), flags.includes('l'))};
+}
+function doMkdir(args){
+  for(const d of args){
+    if(d==='-p') continue;
+    const p=resolvePath(d); const parent=getParent(p); const name=p[p.length-1];
+    if(!parent){ print(`mkdir: ruta inválida '${d}'`,'err'); continue; }
+    if(parent.children[name]){ print(`mkdir: no se puede crear el directorio '${d}': El fichero ya existe`,'err'); continue; }
+    parent.children[name]=mkdir_({}, currentUser);
+  }
+  return {out:''};
+}
+function doRmdir(args){
+  for(const d of args){
+    const p=resolvePath(d); const parent=getParent(p); const name=p[p.length-1];
+    if(!parent||!parent.children[name]){ print(`rmdir: no se puede borrar '${d}': No existe`,'err'); continue; }
+    const node=parent.children[name];
+    if(node.type!=='dir'){ print(`rmdir: '${d}' no es un directorio`,'err'); continue; }
+    if(Object.keys(node.children).length>0){ print(`rmdir: '${d}' no está vacío`,'err'); continue; }
+    delete parent.children[name];
+  }
+  return {out:''};
+}
+function doRm(args){
+  const recursive=args.some(a=>a==='-r'||a==='-rf'||a==='-fr');
+  const force=args.some(a=>a==='-f'||a==='-rf'||a==='-fr');
+  const targets=args.filter(a=>!a.startsWith('-'));
+  for(const t of targets){
+    const p=resolvePath(t); const parent=getParent(p); const name=p[p.length-1];
+    if(!parent||!parent.children[name]){ if(!force) print(`rm: no se puede borrar '${t}': No existe`,'err'); continue; }
+    const node=parent.children[name];
+    if(node.type==='dir' && Object.keys(node.children).length>0 && !recursive){ print(`rm: '${t}' es un directorio (usa -r)`,'err'); continue; }
+    delete parent.children[name];
+  }
+  return {out:''};
+}
+function doTouch(args){
+  for(const t of args){
+    const p=resolvePath(t); const parent=getParent(p); const name=p[p.length-1];
+    if(!parent){ print(`touch: no se puede crear '${t}'`,'err'); continue; }
+    if(!parent.children[name]) parent.children[name]=mkfile_('', currentUser);
+    else parent.children[name].mtime=nowStr();
+  }
+  return {out:''};
+}
+function copyNode(node){ if(node.type==='file') return mkfile_(node.content, node.owner); const nc={}; for(const k in node.children) nc[k]=copyNode(node.children[k]); return mkdir_(nc, node.owner); }
+function doCp(args){
+  const flags=args.filter(a=>a.startsWith('-')); const rest=args.filter(a=>!a.startsWith('-'));
+  if(rest.length<2) return {err:'uso: cp origen destino'};
+  const recursive=flags.some(f=>f.includes('a')||f.includes('r'));
+  const dest=rest[rest.length-1]; const sources=rest.slice(0,-1);
+  const destP=resolvePath(dest); let destNode=getNode(destP);
+  for(const s of sources){
+    const sp=resolvePath(s); const snode=getNode(sp);
+    if(!snode){ print(`cp: no se puede efectuar 'stat' sobre '${s}': No existe`,'err'); continue; }
+    if(snode.type==='dir' && !recursive){ print(`cp: se omite el directorio '${s}' (usa -r/-a)`,'err'); continue; }
+    if(destNode && destNode.type==='dir') destNode.children[sp[sp.length-1]]=copyNode(snode);
+    else { const parent=getParent(destP); if(parent) parent.children[destP[destP.length-1]]=copyNode(snode); }
+  }
+  return {out:''};
+}
+function doMv(args){
+  if(args.length<2) return {err:'uso: mv origen destino'};
+  const dest=args[args.length-1]; const sources=args.slice(0,-1);
+  const destP=resolvePath(dest); let destNode=getNode(destP);
+  for(const s of sources){
+    const sp=resolvePath(s); const sparent=getParent(sp); const sname=sp[sp.length-1];
+    if(!sparent||!sparent.children[sname]){ print(`mv: no se puede efectuar 'stat' sobre '${s}': No existe`,'err'); continue; }
+    const node=sparent.children[sname];
+    if(destNode && destNode.type==='dir') destNode.children[sname]=node;
+    else { const parent=getParent(destP); parent.children[destP[destP.length-1]]=node; }
+    delete sparent.children[sname];
+  }
+  return {out:''};
+}
+function doLn(args){
+  const symbolic=args.includes('-s'); const rest=args.filter(a=>a!=='-s');
+  if(rest.length<2) return {err:'uso: ln [-s] objetivo enlace'};
+  const [target, linkname]=rest;
+  const tnode=getNode(resolvePath(target));
+  if(!tnode) return {err:`ln: no existe '${target}'`};
+  const lp=resolvePath(linkname); const parent=getParent(lp); const name=lp[lp.length-1];
+  if(!parent) return {err:'ln: ruta inválida'};
+  parent.children[name]= symbolic ? mkfile_(`[enlace simbólico → ${target}]`, currentUser) : copyNode(tnode);
+  return {out:''};
+}
+function doCat(args, stdin){
+  if(args.length===0) return {out: stdin||''};
+  let out='';
+  for(const a of args){
+    const node=getNode(resolvePath(a));
+    if(!node){ print(`cat: ${a}: No existe el fichero o directorio`,'err'); continue; }
+    if(node.type==='dir'){ print(`cat: ${a}: Es un directorio`,'err'); continue; }
+    out+=node.content;
+  }
+  return {out};
+}
+function doHeadTail(args, stdin, isHead){
+  let n=10; const rest=[];
+  for(let i=0;i<args.length;i++){ if(args[i]==='-n'){ n=parseInt(args[i+1])||10; i++; } else rest.push(args[i]); }
+  let text=stdin;
+  if(rest.length){ const node=getNode(resolvePath(rest[0])); if(!node) return {err:`${isHead?'head':'tail'}: no se puede abrir '${rest[0]}'`}; text=node.content; }
+  const lines=(text||'').split('\n');
+  return {out:(isHead?lines.slice(0,n):lines.slice(-n)).join('\n')};
+}
+function doEcho(args){
+  const envMap={USER:currentUser,HOME:pathToStr(HOME),PWD:pathToStr(cwd)};
+  return {out: args.map(a=> a.startsWith('$') ? (envMap[a.slice(1)]??'') : a).join(' ')};
+}
+function doGrep(args, stdin){
+  const ignoreCase=args.includes('-i'); const rest=args.filter(a=>a!=='-i');
+  const pattern=rest[0]; if(!pattern) return {err:'uso: grep [-i] patrón [archivo]'};
+  let lines;
+  if(rest[1]){ const node=getNode(resolvePath(rest[1])); if(!node) return {err:`grep: ${rest[1]}: No existe`}; lines=node.content.split('\n'); }
+  else lines=(stdin||'').split('\n');
+  const re=new RegExp(pattern.replace(/[.*+?^${}()|[\]\\]/g,c=>c==='*'?'.*':'\\'+c), ignoreCase?'i':'');
+  return {out: lines.filter(l=>re.test(l)).join('\n')};
+}
+function doWc(args, stdin){
+  const rest=args.filter(a=>!a.startsWith('-'));
+  let text; if(rest[0]){ const node=getNode(resolvePath(rest[0])); if(!node) return {err:`wc: ${rest[0]}: No existe`}; text=node.content; } else text=stdin||'';
+  const lines=text.split('\n').length-1; const words=text.trim()?text.trim().split(/\s+/).length:0; const chars=text.length;
+  if(args.includes('-l')) return {out:String(lines)};
+  if(args.includes('-w')) return {out:String(words)};
+  if(args.includes('-c')) return {out:String(chars)};
+  return {out:`  ${lines}  ${words} ${chars} ${rest[0]||''}`};
+}
+function doSort(args, stdin){
+  const rest=args.filter(a=>!a.startsWith('-'));
+  let text; if(rest[0]){ const node=getNode(resolvePath(rest[0])); if(!node) return {err:`sort: ${rest[0]}: No existe`}; text=node.content; } else text=stdin||'';
+  return {out: text.split('\n').filter(l=>l!=='').sort().join('\n')};
+}
+function doFind(args){
+  let base='.'; let nameFilter=null;
+  for(let i=0;i<args.length;i++){ if(args[i]==='-name') nameFilter=args[++i]; else if(!args[i].startsWith('-')) base=args[i]; }
+  const startArr=resolvePath(base); const startNode=getNode(startArr);
+  if(!startNode) return {err:`find: '${base}': No existe`};
+  const results=[];
+  function walk(node, arr){
+    const matches = !nameFilter || new RegExp('^'+nameFilter.replace(/\*/g,'.*')+'$').test(arr[arr.length-1]||'');
+    if(matches) results.push(pathToStr(arr));
+    if(node.type==='dir') for(const k in node.children) walk(node.children[k], [...arr,k]);
+  }
+  walk(startNode, startArr);
+  return {out: results.join('\n')};
+}
+function doChmod(args){
+  if(args.length<2) return {err:'uso: chmod MODO archivo'};
+  const spec=args[0];
+  for(const t of args.slice(1)){
+    const node=getNode(resolvePath(t));
+    if(!node){ print(`chmod: no se puede acceder a '${t}'`,'err'); continue; }
+    if(!chmodApply(node, spec)) print(`chmod: modo inválido: '${spec}'`,'err');
+  }
+  return {out:''};
+}
+function doChown(args, isGroup){
+  if(args.length<2) return {err:`uso: ${isGroup?'chgrp':'chown'} propietario archivo`};
+  const recursive=args.includes('-R'); const rest=args.filter(a=>a!=='-R'); const owner=rest[0];
+  for(const t of rest.slice(1)){
+    const node=getNode(resolvePath(t)); if(!node){ print(`chown: no se puede acceder a '${t}'`,'err'); continue; }
+    function apply(n){ if(isGroup) n.group=owner; else n.owner=owner; if(n.type==='dir'&&recursive) for(const k in n.children) apply(n.children[k]); }
+    apply(node);
+  }
+  return {out:''};
+}
+function doUseradd(args){
+  let name, group=null; const rest=[];
+  for(let i=0;i<args.length;i++){ if(args[i]==='-g') group=args[++i]; else rest.push(args[i]); }
+  name=rest[rest.length-1];
+  if(!name) return {err:'uso: useradd [-g grupo] usuario'};
+  if(users[name]) return {err:`useradd: el usuario '${name}' ya existe`};
+  const uid=1001+Object.keys(users).length;
+  users[name]={uid,gid:uid,groups:[group||name]};
+  if(group){ groups[group]=groups[group]||[]; groups[group].push(name); }
+  groups[name]=groups[name]||[];
+  let cur=root; for(const seg of ['home',name]){ if(!cur.children[seg]) cur.children[seg]=mkdir_({}, name); cur=cur.children[seg]; }
+  refreshPasswdGroup();
+  return {out:`Usuario "${name}" creado (uid=${uid}).`};
+}
+function doUserdel(args){
+  const removeHome=args.includes('-r'); const name=args.filter(a=>a!=='-r')[0];
+  if(!name) return {err:'uso: userdel [-r] usuario'};
+  if(!users[name]) return {err:`userdel: '${name}' no existe`};
+  if(name===currentUser) return {err:'userdel: no puedes borrar tu propio usuario activo'};
+  delete users[name];
+  for(const g in groups) groups[g]=groups[g].filter(u=>u!==name);
+  if(removeHome){ const h=getNode(['home']); if(h) delete h.children[name]; }
+  refreshPasswdGroup();
+  return {out:`Usuario "${name}" eliminado.`};
+}
+function doGroupadd(args){ const name=args[0]; if(!name) return {err:'uso: groupadd nombre'}; if(groups[name]) return {err:`ya existe '${name}'`}; groups[name]=[]; refreshPasswdGroup(); return {out:`Grupo "${name}" creado.`}; }
+function doGroupdel(args){ const name=args[0]; if(!groups[name]) return {err:`groupdel: '${name}' no existe`}; delete groups[name]; refreshPasswdGroup(); return {out:`Grupo "${name}" eliminado.`}; }
+function doPasswd(args){
+  const user=args[0]||currentUser;
+  if(!users[user]) return {err:`passwd: usuario '${user}' desconocido`};
+  return {out:`Cambiando contraseña para ${user}.\nNueva contraseña: (simulado)\npasswd: contraseña actualizada correctamente`};
+}
+function doAptGet(args){
+  const sub=args[0]; const pkgs=args.slice(1).filter(a=>!a.startsWith('-'));
+  if(sub==='update') return {out:'Leyendo lista de paquetes... Hecho'};
+  if(sub==='upgrade') return {out:'0 actualizados, 0 nuevos instalados, 0 para eliminar.'};
+  if(sub==='clean') return {out:'Caché de paquetes eliminada.'};
+  if(sub==='install'){ let out=[]; pkgs.forEach(p=>{ if(installedPkgs.has(p)) out.push(`${p} ya está instalado.`); else if(pkgCatalog[p]){ installedPkgs.add(p); out.push(`Instalando ${p} (${pkgCatalog[p].version})... hecho.`); } else out.push(`E: No se pudo encontrar el paquete ${p}`); }); return {out:out.join('\n')}; }
+  if(sub==='remove'){ let out=[]; pkgs.forEach(p=>{ if(installedPkgs.has(p)){ installedPkgs.delete(p); out.push(`Eliminando ${p}... hecho.`); } else out.push(`'${p}' no está instalado.`); }); return {out:out.join('\n')}; }
+  return {err:'uso: apt-get {update|install|remove|upgrade|clean}'};
+}
+function doAptCache(args){
+  if(args[0]==='search'){ const term=args[1]||''; const found=Object.entries(pkgCatalog).filter(([k,v])=>k.includes(term)); return {out: found.map(([k,v])=>`${k} - ${v.desc}`).join('\n')||'(sin resultados)'}; }
+  if(args[0]==='show'){ const p=args[1]; if(!pkgCatalog[p]) return {err:`no localizado ${p}`}; return {out:`Package: ${p}\nVersion: ${pkgCatalog[p].version}\nDescription: ${pkgCatalog[p].desc}`}; }
+  return {err:'uso: apt-cache {search|show} paquete'};
+}
+function doDpkg(args){
+  if(args[0]==='-i'){ const name=(args[1]||'').replace(/\.deb$/,''); installedPkgs.add(name); return {out:`Desempaquetando ${name}...\nConfigurando ${name}...`}; }
+  if(args[0]==='-r'){ installedPkgs.delete(args[1]); return {out:`Eliminando ${args[1]}...`}; }
+  if(args[0]==='-l') return {out:[...installedPkgs].map(p=>`ii  ${p}`).join('\n')};
+  return {err:'uso: dpkg -i|-r|-l'};
+}
+function doRpm(args){
+  if((args[0]||'').includes('i')){ const name=(args[args.length-1]||'').replace(/\.rpm$/,''); installedPkgs.add(name); return {out:`Instalando ${name}... [100%]`}; }
+  if(args[0]==='-qa') return {out:[...installedPkgs].join('\n')};
+  return {out:`rpm ${args.join(' ')} — simulado.`};
+}
+function doYum(args){
+  const sub=args[0], pkg=args[1];
+  if(sub==='install'){ installedPkgs.add(pkg); return {out:`Instalado: ${pkg}`}; }
+  if(sub==='remove'){ installedPkgs.delete(pkg); return {out:`Eliminado: ${pkg}`}; }
+  if(sub==='list') return {out:[...installedPkgs].join('\n')};
+  return {err:'uso: yum {install|remove|list}'};
+}
+function psTable(){ return '  PID TTY          TIME CMD\n 1201 pts/0    00:00:00 bash\n 1340 pts/0    00:00:02 node\n 1355 pts/0    00:00:00 ps'; }
+function topTable(){ return 'top - 10:44:12 up 2:16\n  PID USER      %CPU  %MEM COMMAND\n 1340 joselin    8.4   5.2 node\n 1201 joselin    0.3   0.1 bash'; }
+function pingText(args){
+  const host=args.filter(a=>!a.startsWith('-'))[0]||'localhost';
+  let out=`PING ${host} (192.168.1.1) 56(84) bytes of data.\n`;
+  for(let i=1;i<=4;i++) out+=`64 bytes from ${host}: icmp_seq=${i} ttl=64 time=${(0.3+Math.random()).toFixed(1)} ms\n`;
+  out+=`\n--- ${host} ping statistics ---\n4 paquetes transmitidos, 4 recibidos, 0% packet loss`;
+  return out;
+}
+function doShutdown(args){
+  const isReboot=args.includes('-r'); const isCancel=args.includes('-c');
+  if(isCancel) return {out:'Apagado planificado cancelado.'};
+  print(isReboot?'Reiniciando el sistema...':'Apagando el sistema...','amber');
+  setTimeout(()=>{
+    if(isReboot){ screen.innerHTML=''; bootSequence(); }
+    else {
+      printRaw('<span class="muted">— sistema detenido — pulsa "Reiniciar sistema" para encender de nuevo —</span>');
+      input.disabled=true;
+    }
+  }, 800);
+  return {out:''};
+}
+function helpText(){
+  return `Escribe cualquier comando de la chuleta (botón Chuleta arriba) o sigue las lecciones del panel de la derecha.
+Categorías disponibles: navegación, archivos, permisos/usuarios, paquetes, sistema, red, backups, procesos.`;
+}
+function manText(args){
+  const c=args[0]; if(!c) return 'Uso: man COMANDO';
+  for(const cat of REFERENCE) for(const item of cat.items){ if(item.cmd.split(' ')[0]===c) return `${item.cmd}\n\n    ${item.desc}`; }
+  return `No hay entrada de manual para ${c} (pero puedes intentar ejecutarlo).`;
+}
+
+let REFERENCE = [];
+let MODULES = [];
+let ALL_COMMANDS = [];
+let TOTAL_LESSONS = 0;
+
+function renderCheatsheet(){
+  const wrap=document.getElementById('refList'); wrap.innerHTML='';
+  REFERENCE.forEach((cat,idx)=>{
+    const det=document.createElement('details'); if(idx===0) det.open=true;
+    const sum=document.createElement('summary'); sum.textContent=cat.cat; det.appendChild(sum);
+    const items=document.createElement('div'); items.className='items';
+    cat.items.forEach(it=>{
+      const row=document.createElement('div'); row.className='cmditem';
+      row.innerHTML=`<code>${esc(it.cmd)}</code>`; row.title=it.desc;
+      row.addEventListener('click', ()=>{ input.value=it.cmd; input.focus(); closeCheatModal(); });
+      items.appendChild(row);
+    });
+    det.appendChild(items); wrap.appendChild(det);
+  });
+}
+const cheatOverlay=document.getElementById('cheatOverlay');
+function openCheatModal(){ cheatOverlay.classList.add('open'); }
+function closeCheatModal(){ cheatOverlay.classList.remove('open'); }
+document.getElementById('btnCheat').addEventListener('click', openCheatModal);
+document.getElementById('closeCheat').addEventListener('click', closeCheatModal);
+cheatOverlay.addEventListener('click', e=>{ if(e.target===cheatOverlay) closeCheatModal(); });
+
+let mode='guided'; let curM=0, curL=0; let completed=new Set(); let hintShown=false;
+function lessonKey(m,l){ return m+'-'+l; }
+function currentLesson(){ return MODULES[curM].lessons[curL]; }
+
+function checkLessonProgress(rawLine){
+  const norm = rawLine.trim();
+  if(norm==='') return;
+  const key = lessonKey(curM, curL);
+  if(completed.has(key)) return;
+  const lesson = currentLesson();
+  if(lesson.test.test(norm)){
+    completed.add(key);
+    printRaw(`<span class="teal">✔ Lección completada: "${esc(lesson.title)}"</span>`);
+    renderTree(); renderProgress();
+    setTimeout(()=>{ goToNextLesson(); }, 500);
+  }
+}
+function goToNextLesson(){
+  if(curL < MODULES[curM].lessons.length-1){ curL++; }
+  else if(curM < MODULES.length-1){ curM++; curL=0; }
+  else { renderLessonPanel(true); renderTree(); return; }
+  hintShown=false;
+  renderLessonPanel();
+  renderTree();
+}
+function goPrev(){
+  if(curL>0) curL--;
+  else if(curM>0){ curM--; curL=MODULES[curM].lessons.length-1; }
+  hintShown=false; renderLessonPanel(); renderTree();
+}
+function goNextManual(){
+  if(curL < MODULES[curM].lessons.length-1){ curL++; }
+  else if(curM < MODULES.length-1){ curM++; curL=0; }
+  hintShown=false; renderLessonPanel(); renderTree();
+}
+function jumpTo(m,l){ curM=m; curL=l; hintShown=false; if(mode==='free') setMode('guided'); renderLessonPanel(); renderTree(); }
+
+function renderProgress(){
+  document.getElementById('progLabel').textContent = `Progreso: ${completed.size}/${TOTAL_LESSONS}`;
+  document.getElementById('progFill').style.width = (completed.size/TOTAL_LESSONS*100)+'%';
+  document.getElementById('lessonCounter').textContent = `${curM+1}.${curL+1}`;
+}
+
+function renderTree(){
+  const wrap=document.getElementById('tree'); wrap.innerHTML='';
+  MODULES.forEach((mod, mi)=>{
+    const doneCount = mod.lessons.filter((_,li)=>completed.has(lessonKey(mi,li))).length;
+    const modDiv=document.createElement('div'); modDiv.className='mod';
+    const head=document.createElement('div'); head.className='modhead'+(doneCount===mod.lessons.length?' done':'');
+    head.innerHTML = `<span>${mod.icon} ${mi+1}. ${esc(mod.title)}</span><span class="count">${doneCount}/${mod.lessons.length}</span>`;
+    modDiv.appendChild(head);
+    mod.lessons.forEach((les, li)=>{
+      const key=lessonKey(mi,li);
+      const isDone=completed.has(key); const isCurrent=(mi===curM && li===curL);
+      const last = li===mod.lessons.length-1;
+      const row=document.createElement('div');
+      row.className='lesson '+(isDone?'done':'pending')+(isCurrent?' current':'');
+      const branch = last?'└─':'├─';
+      const mark = isCurrent?'▶':(isDone?'✓':'○');
+      row.innerHTML = `<span class="branch">${branch}</span><span class="mark">${mark}</span><span class="ltitle">${mi+1}.${li+1} ${esc(les.title)}</span>`;
+      row.addEventListener('click', ()=>jumpTo(mi,li));
+      modDiv.appendChild(row);
+    });
+    wrap.appendChild(modDiv);
+  });
+}
+
+function renderLessonPanel(finished){
+  const panel=document.getElementById('lessonPanel');
+  if(mode==='free'){
+    panel.innerHTML = `<div class="freebox">
+      <div class="lbadge">práctica libre</div>
+      <p>Estás en modo libre: escribe cualquier comando de la chuleta sin que se compruebe nada automáticamente. Perfecto para experimentar sin miedo a "romper" algo.</p>
+      <p class="muted">Consejo: usa el botón Chuleta para inspirarte, o toca cualquier lección del árbol de la izquierda para volver al modo guiado desde ese punto.</p>
+    </div>`;
+    return;
+  }
+  if(finished || completed.size===TOTAL_LESSONS){
+    panel.innerHTML = `<div class="success" style="margin-bottom:14px;">🎉 ¡Enhorabuena! Has completado los 5 módulos y las ${TOTAL_LESSONS} lecciones.</div>
+      <p class="lexplain">Ya conoces navegación, archivos, permisos, búsqueda con tuberías y comandos de sistema — la base completa de UF1286.</p>
+      <button class="iconbtn" id="goFreeBtn">🧪 Pasar a práctica libre</button>`;
+    document.getElementById('goFreeBtn')?.addEventListener('click', ()=>setMode('free'));
+    return;
+  }
+  const lesson = currentLesson();
+  const key = lessonKey(curM,curL);
+  const isDone = completed.has(key);
+  panel.innerHTML = `
+    <div class="lbadge">módulo ${curM+1} · lección ${curL+1}/${MODULES[curM].lessons.length}</div>
+    <div class="ltitle2">${esc(lesson.title)}${isDone?' ✓':''}</div>
+    <div class="lexplain">${esc(lesson.explain)}</div>
+    <div class="ltask"><b>Tu tarea</b>${esc(lesson.task)}</div>
+    <div class="lbtns">
+      <button id="btnHint">💡 Pista</button>
+      <button id="btnWrite">✍️ Escribir por mí</button>
+    </div>
+    <div class="lhintbox" id="hintBox">${esc(lesson.hint)}</div>
+    <div class="lnav">
+      <button id="btnPrev">◀ Anterior</button>
+      <button id="btnNext">Siguiente ▶</button>
+    </div>`;
+  document.getElementById('btnHint').addEventListener('click', ()=>{ hintShown=!hintShown; document.getElementById('hintBox').classList.toggle('show', hintShown); });
+  document.getElementById('btnWrite').addEventListener('click', ()=>{
+    input.value = lesson.answer;
+    setTimeout(()=>{ submitLine(lesson.answer); }, 300);
+  });
+  document.getElementById('btnPrev').addEventListener('click', goPrev);
+  document.getElementById('btnNext').addEventListener('click', goNextManual);
+  document.getElementById('hintBox').classList.toggle('show', hintShown);
+}
+
+function setMode(m){
+  mode=m;
+  document.getElementById('tabGuided').classList.toggle('active', m==='guided');
+  document.getElementById('tabFree').classList.toggle('active', m==='free');
+  renderLessonPanel();
+}
+document.getElementById('tabGuided').addEventListener('click', ()=>setMode('guided'));
+document.getElementById('tabFree').addEventListener('click', ()=>setMode('free'));
+
+document.getElementById('btnReset').addEventListener('click', ()=>{
+  if(!confirm('Esto borrará todo el progreso y el sistema de ficheros simulado. ¿Continuar?')) return;
+  resetAllState();
+  history=[]; histIdx=-1; completed=new Set(); curM=0; curL=0; hintShown=false; mode='guided';
+  setMode('guided');
+  screen.innerHTML='';
+  bootSequence();
+  renderTree(); renderProgress();
+});
+
+function bootSequence(){
+  const lines = [
+    ['TerminalLab BIOS v2.4.1', 'muted'],
+    ['Comprobando memoria... 8192 MB OK', 'muted'],
+    ['Cargando GNU/Linux 6.8.0-terminal-lab...', 'muted'],
+  ];
+  let i=0; input.disabled=true;
+  function step(){
+    if(i<lines.length){ print(lines[i][0], lines[i][1]); i++; setTimeout(step,200); }
+    else {
+      print('terminal-lab login: joselin', 'muted');
+      setTimeout(()=>{
+        print('Último acceso: '+new Date().toLocaleString('es-ES'), 'muted');
+        printRaw(`<span class="teal">¡Bienvenida a Terminal Lab, Joselin! Sigue la lección del panel de la derecha, o cambia a "Práctica libre" cuando quieras.</span>`);
+        input.disabled=false; updatePrompt(); input.focus();
+      }, 240);
+    }
+  }
+  step();
+}
+/* ============================= TECLADO VIRTUAL ============================= */
+let vkShift=false, vkSym=false;
+const VK_LETTERS = [
+  ['q','w','e','r','t','y','u','i','o','p'],
+  ['a','s','d','f','g','h','j','k','l','ñ'],
+  ['z','x','c','v','b','n','m']
+];
+const VK_SYMBOLS = [
+  ['1','2','3','4','5','6','7','8','9','0'],
+  ['|','/','\\','~','*','^','$','%','&','#'],
+  ['(',')','[',']','{','}','<','>','_','-']
+];
+function vkPress(k){
+  const ch = vkShift ? k.toUpperCase() : k;
+  insertAtCursor(ch);
+  if(vkShift){ vkShift=false; renderKeyboard(); }
+}
+function renderKeyboard(){
+  const wrap = document.getElementById('vkeyboard');
+  wrap.innerHTML='';
+  const fnRow = document.createElement('div'); fnRow.className='vk-row';
+  [['Tab',()=>doTabComplete()],['Ctrl+C',()=>ctrlC()],['Ctrl+L',()=>ctrlL()],['↑',()=>historyUp()],['↓',()=>historyDown()]].forEach(([label,fn])=>{
+    const b=document.createElement('div'); b.className='vk-key fn wide'; b.textContent=label;
+    b.addEventListener('click', fn); fnRow.appendChild(b);
+  });
+  wrap.appendChild(fnRow);
+
+  const rows = vkSym ? VK_SYMBOLS : VK_LETTERS;
+  rows.forEach((row, ri)=>{
+    const rowDiv=document.createElement('div'); rowDiv.className='vk-row';
+    if(!vkSym && ri===2){
+      const shiftBtn=document.createElement('div'); shiftBtn.className='vk-key fn'+(vkShift?' on':''); shiftBtn.textContent='⇧';
+      shiftBtn.addEventListener('click', ()=>{ vkShift=!vkShift; renderKeyboard(); }); rowDiv.appendChild(shiftBtn);
+    }
+    row.forEach(k=>{
+      const b=document.createElement('div'); b.className='vk-key'+(k==='|'?' accent':'');
+      b.textContent = vkShift && !vkSym ? k.toUpperCase() : k;
+      b.addEventListener('click', ()=>vkPress(k));
+      rowDiv.appendChild(b);
+    });
+    if(!vkSym && ri===2){
+      const bsBtn=document.createElement('div'); bsBtn.className='vk-key fn'; bsBtn.textContent='⌫';
+      bsBtn.addEventListener('click', backspaceAtCursor); rowDiv.appendChild(bsBtn);
+    }
+    wrap.appendChild(rowDiv);
+  });
+
+  const lastRow=document.createElement('div'); lastRow.className='vk-row';
+  const symBtn=document.createElement('div'); symBtn.className='vk-key fn wide'; symBtn.textContent = vkSym?'ABC':'123·|';
+  symBtn.addEventListener('click', ()=>{ vkSym=!vkSym; renderKeyboard(); }); lastRow.appendChild(symBtn);
+  const spaceBtn=document.createElement('div'); spaceBtn.className='vk-key xwide'; spaceBtn.textContent='espacio';
+  spaceBtn.addEventListener('click', ()=>insertAtCursor(' ')); lastRow.appendChild(spaceBtn);
+  if(vkSym){
+    const bsBtn2=document.createElement('div'); bsBtn2.className='vk-key fn'; bsBtn2.textContent='⌫';
+    bsBtn2.addEventListener('click', backspaceAtCursor); lastRow.appendChild(bsBtn2);
+  }
+  const enterBtn=document.createElement('div'); enterBtn.className='vk-key fn wide accent'; enterBtn.textContent='Enter ⏎';
+  enterBtn.addEventListener('click', ()=>submitLine(input.value)); lastRow.appendChild(enterBtn);
+  wrap.appendChild(lastRow);
+}
+renderKeyboard();
+
+/* ============================= CARGA DE CONTENIDO EXTERNO ============================= */
+const APP_VERSION = 'v1.0.0';
+document.getElementById('appVersion').textContent = APP_VERSION;
+
+function reviveRegex(obj){
+  if(Array.isArray(obj)) return obj.map(reviveRegex);
+  if(obj && typeof obj==='object'){
+    if(obj.__regex) return new RegExp(obj.source, obj.flags);
+    const out={}; for(const k in obj) out[k]=reviveRegex(obj[k]);
+    return out;
+  }
+  return obj;
+}
+
+async function loadContent(){
+  try{
+    const [refRes, modRes, verRes] = await Promise.all([
+      fetch('content/reference.json', {cache:'no-cache'}),
+      fetch('content/modules.json', {cache:'no-cache'}),
+      fetch('content/version.json', {cache:'no-cache'}).catch(()=>null)
+    ]);
+    REFERENCE = await refRes.json();
+    MODULES = reviveRegex(await modRes.json());
+    ALL_COMMANDS = Array.from(new Set(REFERENCE.flatMap(c=>c.items.map(i=>i.cmd.split(' ')[0]))));
+    TOTAL_LESSONS = MODULES.reduce((s,m)=>s+m.lessons.length,0);
+    if(verRes){
+      try{
+        const v = await verRes.json();
+        document.getElementById('contentVersion').textContent = 'contenido '+v.version+' ('+v.updated+')';
+      }catch(_e){}
+    }
+    return true;
+  }catch(err){
+    return false;
+  }
+}
+
+function bootApp(){
+  resetAllState();
+  renderCheatsheet();
+  renderTree(); renderProgress(); renderLessonPanel();
+  bootSequence();
+}
+
+loadContent().then(ok=>{
+  if(ok){ bootApp(); }
+  else{
+    document.getElementById('lessonPanel').innerHTML = '<div class="freebox"><p class="err">No se pudo cargar el contenido de las lecciones (sin conexión y sin caché previa). Conéctate a internet una vez para que la app guarde el contenido y luego funcionará sin conexión.</p></div>';
+    resetAllState();
+    bootSequence();
+  }
+});
+
+/* ============================= SERVICE WORKER Y ACTUALIZACIONES ============================= */
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('sw.js').then(reg=>{
+      reg.addEventListener('updatefound', ()=>{
+        const newWorker = reg.installing;
+        newWorker.addEventListener('statechange', ()=>{
+          if(newWorker.state==='installed' && navigator.serviceWorker.controller){
+            document.getElementById('updateBar').classList.add('show');
+          }
+        });
+      });
+    }).catch(()=>{});
+  });
+  let refreshing = false;
+  navigator.serviceWorker.addEventListener('controllerchange', ()=>{
+    if(refreshing) return;
+    refreshing = true;
+    window.location.reload();
+  });
+  document.getElementById('updateBar').addEventListener('click', ()=>{
+    navigator.serviceWorker.getRegistration().then(reg=>{
+      if(reg && reg.waiting) reg.waiting.postMessage({type:'SKIP_WAITING'});
+      else window.location.reload();
+    });
+  });
+}
+</script>
+</body>
+</html>
